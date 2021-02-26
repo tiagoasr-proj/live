@@ -27,8 +27,7 @@ namespace GerenciadorLives.Models
         public string LinhaBoleto
         {
             get
-            {
-               
+            {               
                 char preenche = '0';
                 var dataBaseBoleto = new DateTime(1997,10,07) ;//'10/07/1997');
                 TimeSpan travelTime = Live.Data - dataBaseBoleto;

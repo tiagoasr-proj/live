@@ -80,16 +80,16 @@ namespace GerenciadorLives.Controllers
             }
 
             //var inscricoes = await _context.Inscricoes.FindAsync(id);
+            //var inscricoes = await _context.Inscricoes.FindAsync(id);
             var inscricoes = await _context.Inscricoes
-                .Include(i => i.Inscrito)
-                .Include(i => i.Live)
-                .FirstOrDefaultAsync(m => m.InscricaoId == id);
+            .Include(i => i.Inscrito)
+            .Include(i => i.Live)
+            .FirstOrDefaultAsync(m => m.InscricaoId == id);
+
             if (inscricoes == null)
             {
                 return NotFound();
             }
-
-            //return View(inscricoes);
             //ViewData["InscritoId"] = new SelectList(_context.Inscritos, "InscritoId", "Nome", inscricoes.InscritoId);
             //ViewData["LiveId"] = new SelectList(_context.Lives, "LiveId", "Nome", inscricoes.LiveId);
             return View(inscricoes);
@@ -98,8 +98,9 @@ namespace GerenciadorLives.Controllers
         // POST: Inscricoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+     
+
+        /*
         public async Task<IActionResult> Edit(int id, [Bind("InscricaoId,LiveId,InscritoId,Pago,Boleto")] Inscricoes inscricoes)
         {
             if (id != inscricoes.InscricaoId)
@@ -129,6 +130,44 @@ namespace GerenciadorLives.Controllers
             }
             ViewData["InscritoId"] = new SelectList(_context.Inscritos, "InscritoId", "Nome", inscricoes.InscritoId);
             ViewData["LiveId"] = new SelectList(_context.Lives, "LiveId", "Nome", inscricoes.LiveId);
+            return View(inscricoes);
+        }
+        */
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditIn(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            //var courseToUpdate = await _context.Courses
+            //    .FirstOrDefaultAsync(c => c.CourseID == id);
+
+            var inscricoes = await _context.Inscricoes
+            .Include(i => i.Inscrito)
+            .Include(i => i.Live)
+            .FirstOrDefaultAsync(m => m.InscricaoId == id);
+
+            if (await TryUpdateModelAsync<Inscricoes>(inscricoes,
+                "",
+                i => i.Pago))
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            //PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
             return View(inscricoes);
         }
 
