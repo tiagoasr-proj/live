@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 
@@ -15,25 +16,36 @@ namespace GerenciadorLives.Models
         public int InscricaoId { get; set; }
         public int LiveId { get; set; }
         public int InscritoId { get; set; }
-        public bool Pago { get; set; }
+        public bool StatusPagamento { get; set; }
+       
+        [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal ValorInscricao { get; set; }
+        public DateTime DataVencimento { get; set; }
 
-        [StringLength(14)] 
-        public string Boleto { get; set; }
+
+        public string FatorVencimento2
+        {
+            get
+            {
+                var dataBaseBoleto = new DateTime(1997, 10, 07);//'10/07/1997');
+                TimeSpan fator = DataVencimento - dataBaseBoleto;
+                return fator.Days + GetNumbers(ValorInscricao.ToString()).PadLeft(10, '0');
+                
+            }
+        }
 
         public virtual Inscritos Inscrito { get; set; }
         public virtual Lives Live { get; set; }
 
 
-        public string LinhaBoleto
+        public string FatorVencimento(DateTime DataVencimento, string ValorInscricao)
         {
-            get
-            {               
-                char preenche = '0';
-                var dataBaseBoleto = new DateTime(1997,10,07) ;//'10/07/1997');
-                TimeSpan travelTime = Live.Data - dataBaseBoleto;
-                return travelTime.Days + GetNumbers(Live.Valor.ToString().PadLeft(10,preenche));
-                //intValue.ToString("D8")
-            }
+            
+            var dataBaseBoleto = new DateTime(1997,10,07) ;//'10/07/1997');
+            TimeSpan fator = DataVencimento - dataBaseBoleto;
+            return fator.Days + GetNumbers(ValorInscricao).PadLeft(10,'0');
+            
         }
 
         private static string GetNumbers(string input)

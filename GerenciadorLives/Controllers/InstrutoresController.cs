@@ -19,9 +19,21 @@ namespace GerenciadorLives.Controllers
         }
 
         // GET: Instrutores
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string filtro)
         {
-            return View(await _context.Instrutores.ToListAsync());
+
+            ViewData["FiltroAtual"] = filtro;
+            var instrutores = from i in _context.Instrutores
+                              select i;
+
+            if (!String.IsNullOrEmpty(filtro))
+            {
+                instrutores = instrutores.Where(i => i.Nome.Contains(filtro)
+                                       || i.Email.Contains(filtro)
+                                       || i.Instagram.Contains(filtro)
+                                       );
+            }
+            return View(await instrutores.AsNoTracking().ToListAsync());            
         }
 
         // GET: Instrutores/Details/5
@@ -33,7 +45,10 @@ namespace GerenciadorLives.Controllers
             }
 
             var instrutores = await _context.Instrutores
-                .FirstOrDefaultAsync(m => m.InstrutorId == id);
+                 .Include(i => i.Lives)         
+                 .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.InstrutorId == id);
+
             if (instrutores == null)
             {
                 return NotFound();

@@ -3,40 +3,69 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Details</h1>
-
+<h1>Detalhes do Inscrito</h1>
 <div>
-    <h4>Inscritos</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nome)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nome)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Instagram)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Instagram)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DataNascimento)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DataNascimento)
         </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Inscricoes)
+        </dt>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Lives</th>
+                    <th>Data</th>
+                    <th>Status Pagamento</th>
+                    <th></th>
+                </tr>
+                @foreach (var item in Model.Inscricoes)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Live.Nome)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Live.Data)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StatusPagamento)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-controller="Inscricoes" asp-route-id="@item.InscricaoId">Detalhe</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </dd>
+
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.InscritoId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.InscritoId">Alterar</a> |
+    <a asp-action="Index">Listar</a>
 </div>

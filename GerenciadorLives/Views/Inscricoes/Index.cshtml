@@ -1,22 +1,37 @@
 ﻿@model IEnumerable<GerenciadorLives.Models.Inscricoes>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inscrições";
 }
 
-<h1>Index</h1>
+<h1>Inscrições</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Nova Inscrição</a>
 </p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+
+        <!--
+     <label asp-for="Inscricoes.Live.Nome" class="control-label"></label>
+     <select asp-for="filtroLive" class="form-control" asp-items="ViewBag.LiveId">
+         <option value="">--</option>
+     </select>
+
+    -->
+        <input type="submit" value="Buscar" class="btn btn-primary" /> |
+        <a asp-action="Index">Lista Completa</a>
+
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Pago)
+                @Html.DisplayNameFor(model => model.StatusPagamento)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Boleto)
+                @Html.DisplayNameFor(model => model.ValorInscricao)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Inscrito)
@@ -31,10 +46,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Pago)
+                @Html.DisplayFor(modelItem => item.StatusPagamento)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Boleto)
+                @Html.DisplayFor(modelItem => item.ValorInscricao)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Inscrito.Nome)
@@ -43,9 +58,9 @@
                 @Html.DisplayFor(modelItem => item.Live.Nome)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.InscricaoId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.InscricaoId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.InscricaoId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.InscricaoId">Alterar</a> |
+                <a asp-action="Details" asp-route-id="@item.InscricaoId">Detalhes</a> |
+                <a asp-action="Delete" asp-route-id="@item.InscricaoId">Excluir</a>
             </td>
         </tr>
 }

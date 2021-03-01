@@ -19,9 +19,20 @@ namespace GerenciadorLives.Controllers
         }
 
         // GET: Inscritos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string filtro)
         {
-            return View(await _context.Inscritos.ToListAsync());
+            ViewData["FiltroAtual"] = filtro;
+            var inscritos = from i in _context.Inscritos
+                              select i;
+
+            if (!String.IsNullOrEmpty(filtro))
+            {
+                inscritos = inscritos.Where(i => i.Nome.Contains(filtro)
+                                       || i.Email.Contains(filtro)
+                                       || i.Instagram.Contains(filtro)
+                                       );
+            }
+            return View(await inscritos.AsNoTracking().ToListAsync());
         }
 
         // GET: Inscritos/Details/5
@@ -33,7 +44,10 @@ namespace GerenciadorLives.Controllers
             }
 
             var inscritos = await _context.Inscritos
-                .FirstOrDefaultAsync(m => m.InscritoId == id);
+                .Include(i => i.Inscricoes)
+                    .ThenInclude(i => i.Live)
+                    .FirstOrDefaultAsync(m => m.InscritoId == id);
+
             if (inscritos == null)
             {
                 return NotFound();

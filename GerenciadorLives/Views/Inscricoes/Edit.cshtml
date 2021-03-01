@@ -1,12 +1,9 @@
 ﻿@model GerenciadorLives.Models.Inscricoes
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Alterar";
 }
-
-<h1>Edit</h1>
-
-<h4>Inscricoes</h4>
+<h1>Alterar Inscrição</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,32 +15,38 @@
                 <!--<select asp-for="LiveId" class="form-control" asp-items="ViewBag.LiveId"></select>-->
                 @Html.DisplayFor(model => model.Live.Nome)
                 <!--<span asp-validation-for="LiveId" class="text-danger"></span>-->
-                </div>
-                <div class="form-group">
-                    <label asp-for="InscritoId" class="control-label"></label>
-                    @Html.DisplayFor(model => model.Inscrito.Nome)
-                    <span asp-validation-for="InscritoId" class="text-danger"></span>
-                </div>
-                <div class="form-group form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" asp-for="Pago" /> @Html.DisplayNameFor(model => model.Pago)
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Boleto" class="control-label"></label>
-                    @Html.DisplayFor(model => model.LinhaBoleto)
-                    <!--<input asp-for="Boleto" class="form-control" />-->
-                    <!--<span asp-validation-for="Boleto" class="text-danger"></span>-->
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </div>
-            </form>
+            </div>
+            <div class="form-group">
+                <label asp-for="InscritoId" class="control-label"></label>
+                @Html.DisplayFor(model => model.Inscrito.Nome)
+                <span asp-validation-for="InscritoId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="StatusPagamento" /> @Html.DisplayNameFor(model => model.StatusPagamento)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ValorInscricao" class="control-label"></label>
+                @Html.DisplayFor(model => model.ValorInscricao)
+                <!--<input asp-for="Boleto" class="form-control" />-->
+                <!--<span asp-validation-for="Boleto" class="text-danger"></span>-->
+            </div>
+            <div class="form-group">
+                <label class="control-label" >capaz</label>
+                @Html.DisplayFor(model => model.FatorVencimento2)
+                <!--<input asp-for="Boleto" class="form-control" />-->
+                <!--<span asp-validation-for="Boleto" class="text-danger"></span>-->
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+            </div>
+        </form>
         </div>
     </div>
 
     <div>
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">Listar</a>
     </div>
 
     @section Scripts {

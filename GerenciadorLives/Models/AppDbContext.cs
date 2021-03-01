@@ -42,7 +42,7 @@ namespace GerenciadorLives.Models
 
                 entity.HasIndex(e => e.LiveId);
 
-                entity.Property(e => e.Boleto).HasColumnName("boleto");
+                //entity.Property(e => e.Boleto).HasColumnName("boleto");
 
                 entity.HasOne(d => d.Inscrito)
                     .WithMany(p => p.Inscricoes)

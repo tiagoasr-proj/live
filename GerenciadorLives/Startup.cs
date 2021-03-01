@@ -57,6 +57,8 @@ namespace GerenciadorLives
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseRequestLocalization("pt-BR");
         }
     }
 }

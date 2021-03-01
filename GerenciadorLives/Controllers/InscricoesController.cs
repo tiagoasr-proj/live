@@ -18,10 +18,19 @@ namespace GerenciadorLives.Controllers
             _context = context;
         }
 
+        private void filtroLives(object filtroLive = null)
+        {
+            var liveSelect = from l in _context.Lives
+                                   orderby l.Nome
+                                   select l;
+            ViewBag.LiveId = new SelectList(liveSelect.AsNoTracking(), "LiveId", "Nome", filtroLive);
+        }
+
         // GET: Inscricoes
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Inscricoes.Include(i => i.Inscrito).Include(i => i.Live);
+            filtroLives();
             return View(await appDbContext.ToListAsync());
         }
 
@@ -41,13 +50,16 @@ namespace GerenciadorLives.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["Fator"] = inscricoes.FatorVencimento(inscricoes.DataVencimento, inscricoes.ValorInscricao.ToString()); 
             return View(inscricoes);
         }
 
         // GET: Inscricoes/Create
         public IActionResult Create()
         {
+
+
+
             ViewData["InscritoId"] = new SelectList(_context.Inscritos, "InscritoId", "Nome");
             ViewData["LiveId"] = new SelectList(_context.Lives, "LiveId", "Nome");
             return View();
@@ -58,13 +70,19 @@ namespace GerenciadorLives.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InscricaoId,LiveId,InscritoId,Pago,Boleto")] Inscricoes inscricoes)
+        public async Task<IActionResult> Create([Bind("LiveId,InscritoId")] Inscricoes inscricoes)
         {
+
             if (ModelState.IsValid)
             {
+                var lives = await _context.Lives.FindAsync(inscricoes.LiveId);
+                inscricoes.ValorInscricao = lives.Valor;
+                inscricoes.DataVencimento = lives.Data.AddDays(-2);
                 _context.Add(inscricoes);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));            
+                return RedirectToAction("Edit", new { ID = inscricoes.InscricaoId });               
+
             }
             ViewData["InscritoId"] = new SelectList(_context.Inscritos, "InscritoId", "Nome", inscricoes.InscritoId);
             ViewData["LiveId"] = new SelectList(_context.Lives, "LiveId", "Nome", inscricoes.LiveId);
@@ -86,53 +104,23 @@ namespace GerenciadorLives.Controllers
             .Include(i => i.Live)
             .FirstOrDefaultAsync(m => m.InscricaoId == id);
 
+            //inscricoes.FatorVencimento(DataVencimento,ValorInscricao.toS)
+
             if (inscricoes == null)
             {
                 return NotFound();
             }
             //ViewData["InscritoId"] = new SelectList(_context.Inscritos, "InscritoId", "Nome", inscricoes.InscritoId);
             //ViewData["LiveId"] = new SelectList(_context.Lives, "LiveId", "Nome", inscricoes.LiveId);
+            ViewData["Fator"] = inscricoes.FatorVencimento(inscricoes.DataVencimento,inscricoes.ValorInscricao.ToString());
             return View(inscricoes);
         }
 
         // POST: Inscricoes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-     
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.    
 
-        /*
-        public async Task<IActionResult> Edit(int id, [Bind("InscricaoId,LiveId,InscritoId,Pago,Boleto")] Inscricoes inscricoes)
-        {
-            if (id != inscricoes.InscricaoId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(inscricoes);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!InscricoesExists(inscricoes.InscricaoId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["InscritoId"] = new SelectList(_context.Inscritos, "InscritoId", "Nome", inscricoes.InscritoId);
-            ViewData["LiveId"] = new SelectList(_context.Lives, "LiveId", "Nome", inscricoes.LiveId);
-            return View(inscricoes);
-        }
-        */
+        
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditIn(int? id)
@@ -140,10 +128,7 @@ namespace GerenciadorLives.Controllers
             if (id == null)
             {
                 return NotFound();
-            }
-
-            //var courseToUpdate = await _context.Courses
-            //    .FirstOrDefaultAsync(c => c.CourseID == id);
+            }          
 
             var inscricoes = await _context.Inscricoes
             .Include(i => i.Inscrito)
@@ -152,7 +137,7 @@ namespace GerenciadorLives.Controllers
 
             if (await TryUpdateModelAsync<Inscricoes>(inscricoes,
                 "",
-                i => i.Pago))
+                i => i.StatusPagamento))
             {
                 try
                 {
@@ -166,8 +151,7 @@ namespace GerenciadorLives.Controllers
                         "see your system administrator.");
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            //PopulateDepartmentsDropDownList(courseToUpdate.DepartmentID);
+            }            
             return View(inscricoes);
         }
 

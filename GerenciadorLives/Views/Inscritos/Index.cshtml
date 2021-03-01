@@ -1,14 +1,22 @@
 ﻿@model IEnumerable<GerenciadorLives.Models.Inscritos>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inscritos";
 }
 
-<h1>Index</h1>
-
+<h1>Inscritos</h1>
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Cadastrar Inscrito</a>
 </p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <input type="text" name="filtro" value="@ViewData["FiltroAtual"]" />
+            <input type="submit" value="Buscar" class="btn btn-primary" /> |
+            <a asp-action="Index">Lista Completa</a>
+        </p>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -20,9 +28,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Instagram)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataNascimento)
             </th>
             <th></th>
         </tr>
@@ -40,12 +45,9 @@
                 @Html.DisplayFor(modelItem => item.Instagram)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DataNascimento)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.InscritoId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.InscritoId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.InscritoId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.InscritoId">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.InscritoId">Detalhes</a> |
+                <a asp-action="Delete" asp-route-id="@item.InscritoId">Excluir</a>
             </td>
         </tr>
 }
