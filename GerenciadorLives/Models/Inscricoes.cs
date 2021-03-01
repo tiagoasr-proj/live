@@ -24,13 +24,13 @@ namespace GerenciadorLives.Models
         public DateTime DataVencimento { get; set; }
 
 
-        public string FatorVencimento2
+        public string FatorVencimento
         {
             get
             {
                 var dataBaseBoleto = new DateTime(1997, 10, 07);//'10/07/1997');
                 TimeSpan fator = DataVencimento - dataBaseBoleto;
-                return fator.Days + GetNumbers(ValorInscricao.ToString()).PadLeft(10, '0');
+                return "00000.00000 00000.000000 00000.000000 0 " + fator.Days + retornaNumeros(ValorInscricao.ToString()).PadLeft(10, '0');
                 
             }
         }
@@ -38,17 +38,7 @@ namespace GerenciadorLives.Models
         public virtual Inscritos Inscrito { get; set; }
         public virtual Lives Live { get; set; }
 
-
-        public string FatorVencimento(DateTime DataVencimento, string ValorInscricao)
-        {
-            
-            var dataBaseBoleto = new DateTime(1997,10,07) ;//'10/07/1997');
-            TimeSpan fator = DataVencimento - dataBaseBoleto;
-            return fator.Days + GetNumbers(ValorInscricao).PadLeft(10,'0');
-            
-        }
-
-        private static string GetNumbers(string input)
+        private static string retornaNumeros(string input)
         {
             return new string(input.Where(c => char.IsDigit(c)).ToArray());
         }

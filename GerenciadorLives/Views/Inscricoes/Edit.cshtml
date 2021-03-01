@@ -29,14 +29,10 @@
             <div class="form-group">
                 <label asp-for="ValorInscricao" class="control-label"></label>
                 @Html.DisplayFor(model => model.ValorInscricao)
-                <!--<input asp-for="Boleto" class="form-control" />-->
-                <!--<span asp-validation-for="Boleto" class="text-danger"></span>-->
             </div>
             <div class="form-group">
-                <label class="control-label" >capaz</label>
-                @Html.DisplayFor(model => model.FatorVencimento2)
-                <!--<input asp-for="Boleto" class="form-control" />-->
-                <!--<span asp-validation-for="Boleto" class="text-danger"></span>-->
+                <label class="control-label" >Linha Digitavel:</label>
+                @Html.DisplayFor(model => model.FatorVencimento)
             </div>
             <div class="form-group">
                 <input type="submit" value="Salvar" class="btn btn-primary" />

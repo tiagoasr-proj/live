@@ -17,18 +17,25 @@ namespace GerenciadorLives.Models
         }
 
         public int LiveId { get; set; }
-
+        [Required(ErrorMessage = "O nome da Live é obrigatório", AllowEmptyStrings = false)]
         [Display(Name = "Evento")]
         public string Nome { get; set; }
-        
+
+        [Required(ErrorMessage = "A descrição é obrigatório", AllowEmptyStrings = false)]
         [Display(Name = "Descrição")] 
         public string Descricao { get; set; }
         public int InstrutorId { get; set; }
+
+        [Required(ErrorMessage = "Informe a data e horario da Live", AllowEmptyStrings = false)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
         public DateTime Data { get; set; }
 
+        [Required(ErrorMessage = "Informe a duração da Live", AllowEmptyStrings = false)]
         [Display(Name = "Duração")] 
         public int Duracao { get; set; }
 
+
+        [Required(ErrorMessage = "Somente numeros permitidos", AllowEmptyStrings = false)]
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Valor { get; set; }

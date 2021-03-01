@@ -18,19 +18,11 @@ namespace GerenciadorLives.Controllers
             _context = context;
         }
 
-        private void filtroLives(object filtroLive = null)
-        {
-            var liveSelect = from l in _context.Lives
-                                   orderby l.Nome
-                                   select l;
-            ViewBag.LiveId = new SelectList(liveSelect.AsNoTracking(), "LiveId", "Nome", filtroLive);
-        }
 
         // GET: Inscricoes
         public async Task<IActionResult> Index()
         {
             var appDbContext = _context.Inscricoes.Include(i => i.Inscrito).Include(i => i.Live);
-            filtroLives();
             return View(await appDbContext.ToListAsync());
         }
 
@@ -50,7 +42,6 @@ namespace GerenciadorLives.Controllers
             {
                 return NotFound();
             }
-            ViewData["Fator"] = inscricoes.FatorVencimento(inscricoes.DataVencimento, inscricoes.ValorInscricao.ToString()); 
             return View(inscricoes);
         }
 
@@ -79,8 +70,7 @@ namespace GerenciadorLives.Controllers
                 inscricoes.ValorInscricao = lives.Valor;
                 inscricoes.DataVencimento = lives.Data.AddDays(-2);
                 _context.Add(inscricoes);
-                await _context.SaveChangesAsync();
-                //return RedirectToAction(nameof(Index));            
+                await _context.SaveChangesAsync();        
                 return RedirectToAction("Edit", new { ID = inscricoes.InscricaoId });               
 
             }
@@ -97,22 +87,15 @@ namespace GerenciadorLives.Controllers
                 return NotFound();
             }
 
-            //var inscricoes = await _context.Inscricoes.FindAsync(id);
-            //var inscricoes = await _context.Inscricoes.FindAsync(id);
             var inscricoes = await _context.Inscricoes
             .Include(i => i.Inscrito)
             .Include(i => i.Live)
             .FirstOrDefaultAsync(m => m.InscricaoId == id);
 
-            //inscricoes.FatorVencimento(DataVencimento,ValorInscricao.toS)
-
             if (inscricoes == null)
             {
                 return NotFound();
             }
-            //ViewData["InscritoId"] = new SelectList(_context.Inscritos, "InscritoId", "Nome", inscricoes.InscritoId);
-            //ViewData["LiveId"] = new SelectList(_context.Lives, "LiveId", "Nome", inscricoes.LiveId);
-            ViewData["Fator"] = inscricoes.FatorVencimento(inscricoes.DataVencimento,inscricoes.ValorInscricao.ToString());
             return View(inscricoes);
         }
 
@@ -144,11 +127,9 @@ namespace GerenciadorLives.Controllers
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException /* ex */)
-                {
-                    //Log the error (uncomment ex variable name and write a log.)
-                    ModelState.AddModelError("", "Unable to save changes. " +
-                        "Try again, and if the problem persists, " +
-                        "see your system administrator.");
+                {                    
+                    ModelState.AddModelError("", "Não foi possivel concluir a operação. " +
+                        "tente novamente.");
                 }
                 return RedirectToAction(nameof(Index));
             }            

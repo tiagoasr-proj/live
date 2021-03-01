@@ -1,10 +1,9 @@
 ﻿@model IEnumerable<GerenciadorLives.Models.Lives>
-@System.Globalization.CultureInfo.CurrentUICulture
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lives";
 }
 
-<h1>Index</h1>
+<h1>Lives</h1>
 
 <p>
     <a asp-action="Create">Nova Live</a>
@@ -58,7 +57,7 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.LiveId">Editar</a> |
                     <a asp-action="Details" asp-route-id="@item.LiveId">Detalhes</a> |
-                    <a asp-action="Delete" asp-route-id="@item.LiveId">Remover</a>
+                    <a asp-action="Delete" asp-route-id="@item.LiveId">Excluir</a>
                 </td>
             </tr>
         }
